@@ -38,10 +38,8 @@ const styles = StyleSheet.create({
   //Descrição da tarefa
   descriptionTask: {
     flex: 1,
-    backgroundColor: "#f5f5f5cf",
     padding: 12,
     paddingHorizontal: 20,
-    borderRadius: 50,
     marginBottom: 5,
     color: "#000",
     fontSize: 16,
@@ -53,14 +51,14 @@ const styles = StyleSheet.create({
     height: 60,
     bottom: 50,
     left: 20,
-    backgroundColor: "#007BFF",
+    backgroundColor: "#D4AF37",
     borderRadius: 50,
     justifyContent: "center",
     alignItems: "center",
   },
   //Estilo do ícone de inclusão
   iconButton: {
-    color: "#fff",
+    color: "#0D0D0D",
     fontSize: 20,
     fontWeight: "bold",
   },
@@ -75,7 +73,7 @@ const styles = StyleSheet.create({
   modalContent: {
     width: 300,
     padding: 20,
-    backgroundColor: "white",
+    backgroundColor: "#f5f5f5",
     borderRadius: 10,
     alignItems: "center",
   },
@@ -99,12 +97,12 @@ const styles = StyleSheet.create({
   },
   //Estilo dos botões
   buttonText: {
-    color: "white",
+    color: "#0D0D0D",
     fontSize: 14,
   },
   //Rodapé da página
   footer: {
-    backgroundColor: "#1976D2",
+    backgroundColor: "#D4AF37",
     padding: 10,
     position: "absolute",
     bottom: 0,
@@ -115,7 +113,7 @@ const styles = StyleSheet.create({
   },
   //Texto do rodapé
   footerText: {
-    color: "#fff",
+    color: "#0D0D0D",
     fontSize: 14,
     textAlign: "left",
   },

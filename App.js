@@ -2,7 +2,7 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import Task from "./src/Task/index";
+import Task from "./src/Home/index";
 import NewTask from "./src/NewTask/index";
 import EditTask from "./src/EditTask/index";
 
@@ -18,9 +18,9 @@ export default function App({ navigation }) {
           name="Task"
           component={Task}
           options={{
-            headerTintColor: "#FFF",
+            headerTintColor: "#0D0D0D",
             headerStyle: {
-              backgroundColor: "#007BFF",
+              backgroundColor: "#D4AF37",
             },
           }}
         />
@@ -29,9 +29,9 @@ export default function App({ navigation }) {
           name="New Task"
           component={NewTask}
           options={{
-            headerTintColor: "#FFF",
+            headerTintColor: "#0D0D0D",
             headerStyle: {
-              backgroundColor: "#007BFF",
+              backgroundColor: "#D4AF37",
             },
           }}
         />
@@ -40,9 +40,9 @@ export default function App({ navigation }) {
           name="Edit Task"
           component={EditTask}
           options={{
-            headerTintColor: "#FFF",
+            headerTintColor: "#0D0D0D",
             headerStyle: {
-              backgroundColor: "#007BFF",
+              backgroundColor: "#D4AF37",
             },
           }}
         />

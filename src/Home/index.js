@@ -15,85 +15,82 @@ import { FontAwesome } from "@expo/vector-icons";
 import styles from "./styles";
 import { Picker } from "@react-native-picker/picker";
 
-export default function Task({ navigation }) {
-  const [task, setTask] = useState([]);
+export default function Home({ navigation }) {
+  const [carro, setCarro] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [taskToDelete, setTaskToDelete] = useState(null);
-  const [hideFinished, setHideFinished] = useState(false);
-  const [filteredTask, setFilteredTask] = useState([]);
-  const [sortOption, setSortOption] = useState("priority");
+  const [CarroToDelete, setCarroToDelete] = useState(null);
+  const [hideEstoque, setHideEstoque] = useState(false);
+  const [filteredCarro, setFilteredCarro] = useState([]);
+  const [sortOption, setSortOption] = useState("categoria");
   const [searchText, setSearchText] = useState("");
 
-  //Função para alterar o status da tarefa
-  function toggleTaskStatus(id, currentStatus) {
-    database.collection("Tasks").doc(id).update({
-      finished: !currentStatus,
+  //Função para alterar o estoque dos carros
+  function toggleCarroStatus(id, currentStatus) {
+    database.collection("Carros").doc(id).update({
+      estoque: !currentStatus,
     });
   }
 
-  //Função para confirmar a exclusão da tarefa
-  function confirmDeleteTask(id) {
-    setTaskToDelete(id);
+  //Função para confirmar a exclusão do carro
+  function confirmDelete(id) {
+    setCarroToDelete(id);
     setShowDeleteModal(true);
   }
 
-  //Função para excluir tarefa
-  function deleteTask() {
-    if (taskToDelete) {
-      database.collection("Tasks").doc(taskToDelete).delete();
-      setTask((prevTasks) =>
-        prevTasks.filter((task) => task.id !== taskToDelete),
+  //Função para excluir carro
+  function deleteCarro() {
+    if (CarroToDelete) {
+      database.collection("Carros").doc(CarroToDelete).delete();
+      setCarro((prevCarro) =>
+        prevCarro.filter((carro) => carro.id !== CarroToDelete),
       );
       setShowDeleteModal(false);
     }
   }
 
-  //Função para cancelar a exclusão da tarefa
+  //Função para cancelar a exclusão do carro
   function cancelDelete() {
     setShowDeleteModal(false);
   }
 
   //Função para formatar data
   function formatDate(dateString) {
-    const date =
-      dateString instanceof Date
-        ? dateString
-        : new Date(dateString.toDate ? dateString.toDate() : dateString);
+    const date = dateString instanceof Date ? dateString : new Date(dateString.toDate ? dateString.toDate() : dateString);
     return date.toISOString().split("T")[0].split("-").reverse().join("/");
   }
 
-  //Função para cor da tarefa
-  function getPriorityColor(priority) {
-    switch (priority) {
-      case "Urgente":
-        return "#D32F2F";
-      case "Alta":
-        return "#F75C00";
-      case "Média":
-        return "#FBC02D";
-      case "Baixa":
-        return "#6B8E23";
+  //Função para cor do modelo dos carros
+  function getCategoriaColor(categoria) {
+    switch (categoria) {
+      case "Esportivo":
+        return "#8B0000";
+      case "SUV":
+        return "#003B46";
+      case "Elétrico":
+        return "#2C5F2D";
+      case "Clássico":
+        return "#C9A13D";
       default:
         return "#000";
     }
   }
 
-  //Função para comparar e classificar as tarefas
-  function compareTasks(a, b) {
-    if (sortOption === "date") {
-      const dateA = new Date(a.date.toDate ? a.date.toDate() : a.date);
-      const dateB = new Date(b.date.toDate ? b.date.toDate() : b.date);
+  //Função para comparar e classificar os carros
+  function compareCarros(a, b) {
+    if (sortOption === "dataLancamento") {
+      const dateA = new Date(a.dataLancamento.toDate ? a.dataLancamento.toDate() : a.dataLancamento);
+      const dateB = new Date(b.dataLancamento.toDate ? b.dataLancamento.toDate() : b.dataLancamento);
 
       return dateA - dateB;
-    } else if (sortOption === "priority") {
-      const priorityOrder = {
-        Urgente: 1,
-        Alta: 2,
-        Média: 3,
-        Baixa: 4,
+    } else if (sortOption === "categoria") {
+      const categoriaOrder = {
+        Esportivo: 1,
+        SUV:       2,
+        Elétrico:  3,
+        Classíco:  4,
       };
       return (
-        (priorityOrder[a.priority] || 5) - (priorityOrder[b.priority] || 5)
+        (categoriaOrder[a.categoria] || 5) - (categoriaOrder[b.categoria] || 5)
       );
     }
     return 0;
@@ -101,55 +98,39 @@ export default function Task({ navigation }) {
 
   //Função para contagem de likes
   function handleLike(id, currentLikes) {
-    database
-      .collection("Tasks")
-      .doc(id)
-      .update({
-        likes: (currentLikes || 0) + 1,
-      });
+    database.collection("Carros").doc(id).update({likes: (currentLikes || 0) + 1,});
   }
 
   //Função para contagem de dislikes
   function handleDislike(id, currentDislikes) {
-    database
-      .collection("Tasks")
-      .doc(id)
-      .update({
-        dislikes: (currentDislikes || 0) + 1,
-      });
+    database.collection("Carros").doc(id).update({dislikes: (currentDislikes || 0) + 1,});
   }
 
-  //UseEffect para buscar as tarefas filtradas
+  //UseEffect para buscar os carros filtrados
   useEffect(() => {
-    const filtered = task.filter((t) => {
-      const matchStatus = hideFinished ? !t.finished : true;
-      const matchSearch = t.description
-        .toLowerCase()
-        .includes(searchText.toLowerCase());
-
+    const filtered = carro.filter((t) => {const matchStatus = hideEstoque ? !t.estoque : true;
+      const matchSearch = t.modelo.toLowerCase().includes(searchText.toLowerCase());
       return matchStatus && matchSearch;
     });
-    const sorted = [...filtered].sort(compareTasks);
-    setFilteredTask(sorted);
-  }, [task, hideFinished, searchText, sortOption]);
+    const sorted = [...filtered].sort(compareCarros);
+    setFilteredCarro(sorted);
+  }, [carro, hideEstoque, searchText, sortOption]);
 
   //Função para buscar informações no Firebase
   useEffect(() => {
-    const unsubscribe = database
-      .collection("Tasks")
-      .onSnapshot((QuerySnapshot) => {
+    const unsubscribe = database.collection("Carros").onSnapshot((QuerySnapshot) => {
         const list = [];
         QuerySnapshot.forEach((doc) => {
           list.push({ ...doc.data(), id: doc.id });
         });
-        setTask(list);
+        setCarro(list);
       });
     return () => unsubscribe();
   }, []);
 
   return (
     <View style={{ flex: 1 }}>
-      {/* Ocultar tarefas finalizadas */}
+      {/* Ocultar carros fora de estoque*/}
       <View
         style={{
           flexDirection: "row",
@@ -161,15 +142,15 @@ export default function Task({ navigation }) {
         }}
       >
         <Switch
-          value={hideFinished}
-          onValueChange={setHideFinished}
-          thumbColor={hideFinished ? "#4caf50" : "#ef5350"}
-          trackColor={hideFinished ? "#4caf50" : "#ef5350"}
+          value={hideEstoque}
+          onValueChange={setHideEstoque}
+          thumbColor={hideEstoque ? "#4caf50" : "#ef5350"}
+          trackColor={hideEstoque ? "#4caf50" : "#ef5350"}
         />
-        <Text style={{ marginLeft: 10 }}>Ocultar tarefas finalizadas</Text>
+        <Text style={{ marginLeft: 10 }}>Ocultar carros fora de estoque</Text>
       </View>
 
-      {/* Definir buscar por data ou prioridade */}
+      {/* Definir buscar por data ou categoria */}
       <View
         style={{
           flexDirection: "row",
@@ -189,12 +170,12 @@ export default function Task({ navigation }) {
           mode="dropdown"
           style={{ width: 150, fontSize: 18 }}
         >
-          <Picker.Item label="Data" value="date" />
-          <Picker.Item label="Prioridade" value="priority" />
+          <Picker.Item label="Data Lançamento" value="dataLancamento" />
+          <Picker.Item label="Categoria" value="categoria" />
         </Picker>
       </View>
 
-      {/* Definir a busca de tarefas pela descrição */}
+      {/* Definir a busca de carros pelo modelo */}
       <View
         style={{
           flexDirection: "row",
@@ -212,13 +193,13 @@ export default function Task({ navigation }) {
           value={searchText}
           onChangeText={setSearchText}
           style={styles.searchInput}
-          placeholder="Pesquise uma tarefa"
+          placeholder="Pesquise um modelo"
         />
       </View>
 
-      {/*Exibição das tarefas */}
+      {/*Exibição dos carros */}
       <FlatList
-        data={filteredTask}
+        data={filteredCarro}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
@@ -240,34 +221,46 @@ export default function Task({ navigation }) {
                 <Text
                   style={[
                     styles.descriptionTask,
-                    item.finished && {
+                    item.estoque && {
                       textDecorationLine: "line-through",
                       color: "#000",
                     },
                   ]}
                 >
-                  {item.description}
+                  {item.modelo}
+                </Text>
+
+                <Text
+                  style={[
+                    styles.descriptionTask,
+                    item.estoque && {
+                      textDecorationLine: "line-through",
+                      color: "#000",
+                    },
+                  ]}
+                >
+                  {item.potencia}
                 </Text>
 
                 <Text
                   style={{
-                    backgroundColor: getPriorityColor(item.priority),
+                    backgroundColor: getCategoriaColor(item.categoria),
                     color: "#fff",
                     paddingHorizontal: 6,
                     paddingVertical: 2,
                     borderRadius: 4,
                   }}
                 >
-                  {item.priority}
+                  {item.categoria}
                 </Text>
 
                 <Text style={{ color: "#000" }}>
-                  {item.date ? formatDate(item.date) : ""}
+                  {item.dataLancamento ? formatDate(item.dataLancamento) : ""}
                 </Text>
               </View>
             </View>
 
-            {/*Botões para manipular tarefas */}
+            {/*Botões para manipulação */}
             <View
               style={{
                 flexDirection: "row",
@@ -312,12 +305,12 @@ export default function Task({ navigation }) {
 
               <TouchableOpacity
                 style={{ marginRight: 15 }}
-                onPress={() => toggleTaskStatus(item.id, item.finished)}
+                onPress={() => toggleCarroStatus(item.id, item.estoque)}
               >
                 <FontAwesome
-                  name={item.finished ? "undo" : "check"}
+                  name={item.estoque ? "undo" : "check"}
                   size={20}
-                  color={item.finished ? "#FFA500" : "#4CAF50"}
+                  color={item.estoque ? "#ff9100" : "#35b30e"}
                 />
               </TouchableOpacity>
 
@@ -326,32 +319,32 @@ export default function Task({ navigation }) {
                 onPress={() =>
                   navigation.navigate("Edit Task", {
                     id: item.id,
-                    description: item.description,
-                    priority: item.priority,
+                    modelo: item.modelo,
+                    categoria: item.categoria,
                     date: item.date,
                   })
                 }
               >
-                <FontAwesome name={"edit"} size={20} color={"#9C27B0"} />
+                <FontAwesome name={"edit"} size={20} color={"#590868"} />
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => confirmDeleteTask(item.id)}>
-                <FontAwesome name={"trash"} size={20} color={"#FF0000"} />
+              <TouchableOpacity onPress={() => confirmDelete(item.id)}>
+                <FontAwesome name={"trash"} size={20} color={"#c41616"} />
               </TouchableOpacity>
             </View>
           </View>
         )}
       />
 
-      {/*Botão para incluir tarefa */}
+      {/*Botão para incluir carro */}
       <TouchableOpacity
         style={styles.buttonNewTask}
         onPress={() => navigation.navigate("New Task")}
       >
-        <FontAwesome name={"plus"} size={20} color={"#FFF"} />
+        <FontAwesome name={"plus"} size={20} color={"#0D0D0D"} />
       </TouchableOpacity>
 
-      {/*Modal para excluir tarefa */}
+      {/*Modal para excluir carro */}
       <Modal
         visible={showDeleteModal}
         transparent={true}
@@ -359,20 +352,19 @@ export default function Task({ navigation }) {
       >
         <View style={styles.overlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalText}>
-              Tem certeza que deseja excluir a tarefa?
-            </Text>
+            <Text style={styles.modalText}>Tem certeza que deseja excluir este carro?</Text>
+
             <View style={styles.buttonContainer}>
               <TouchableOpacity
-                style={[styles.button, { backgroundColor: "#FF0000" }]}
+                style={[styles.button, { backgroundColor: "#c41616" }]}
                 onPress={cancelDelete}
               >
                 <Text style={styles.buttonText}>Cancelar</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={[styles.button, { backgroundColor: "#007BFF" }]}
-                onPress={deleteTask}
+                style={[styles.button, { backgroundColor: "#35b30e" }]}
+                onPress={deleteCarro}
               >
                 <Text style={styles.buttonText}>Confirmar</Text>
               </TouchableOpacity>
@@ -384,7 +376,7 @@ export default function Task({ navigation }) {
       {/*Rodapé da página */}
       <View style={styles.footer}>
         <Text style={styles.footerText}>
-          Desenvolvido por ADS FASM - 5 Período 2025
+          Desenvolvido por Pedro Castro
         </Text>
       </View>
     </View>
