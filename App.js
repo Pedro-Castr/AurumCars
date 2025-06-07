@@ -7,6 +7,7 @@ import Home from "./src/Home/index";
 import AddCarro from "./src/AddCarro/index";
 import EditCarro from "./src/EditCarro/index";
 import Login from "./src/Login/index";
+import Sobre from "./src/Sobre";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -22,6 +23,7 @@ function DrawerRoutes() {
     >
       <Drawer.Screen name="Home" component={Home} />
       <Drawer.Screen name="Adicionar Carro" component={AddCarro} />
+      <Drawer.Screen name="Sobre" component={Sobre} />
     </Drawer.Navigator>
   );
 }
