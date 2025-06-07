@@ -5,6 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Home from "./src/Home/index";
 import AddCarro from "./src/AddCarro/index";
 import EditCarro from "./src/EditCarro/index";
+import Login from "./src/Login/index";
 
 //definição do Stack
 const Stack = createStackNavigator();
@@ -13,7 +14,18 @@ const Stack = createStackNavigator();
 export default function App({ navigation }) {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{
+            headerTintColor: "#0D0D0D",
+            headerStyle: {
+              backgroundColor: "#D4AF37",
+            },
+          }}
+        />
+
         <Stack.Screen
           name="Home"
           component={Home}
