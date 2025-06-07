@@ -1,63 +1,39 @@
-//importações referentes a navegação e as telas
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+
 import Home from "./src/Home/index";
 import AddCarro from "./src/AddCarro/index";
 import EditCarro from "./src/EditCarro/index";
 import Login from "./src/Login/index";
 
-//definição do Stack
 const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
-//função principal e tela inicial
-export default function App({ navigation }) {
+// Navegação em gaveta (Drawer)
+function DrawerRoutes() {
+  return (
+    <Drawer.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: "#D4AF37" },
+        headerTintColor: "#0D0D0D",
+      }}
+    >
+      <Drawer.Screen name="Home" component={Home} />
+      <Drawer.Screen name="Adicionar Carro" component={AddCarro} />
+    </Drawer.Navigator>
+  );
+}
+
+// App principal com Stack + Drawer
+export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{
-            headerTintColor: "#0D0D0D",
-            headerStyle: {
-              backgroundColor: "#D4AF37",
-            },
-          }}
-        />
-
-        <Stack.Screen
-          name="Home"
-          component={Home}
-          options={{
-            headerTintColor: "#0D0D0D",
-            headerStyle: {
-              backgroundColor: "#D4AF37",
-            },
-          }}
-        />
-
-        <Stack.Screen
-          name="AddCarro"
-          component={AddCarro}
-          options={{
-            headerTintColor: "#0D0D0D",
-            headerStyle: {
-              backgroundColor: "#D4AF37",
-            },
-          }}
-        />
-
-        <Stack.Screen
-          name="EditCarro"
-          component={EditCarro}
-          options={{
-            headerTintColor: "#0D0D0D",
-            headerStyle: {
-              backgroundColor: "#D4AF37",
-            },
-          }}
-        />
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="DrawerRoutes" component={DrawerRoutes} />
+        <Stack.Screen name="Editar Carro" component={EditCarro} />
       </Stack.Navigator>
     </NavigationContainer>
   );

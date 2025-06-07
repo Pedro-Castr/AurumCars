@@ -96,7 +96,9 @@ export default function EditCarro({ navigation, route }) {
         dataLancamento: carDate
       });
 
-      navigation.navigate("Home");
+      navigation.navigate("DrawerRoutes", {
+        screen: "Home",
+      });
     }
   };
 

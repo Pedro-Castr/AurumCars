@@ -25,7 +25,7 @@ export default function Login({ navigation }) {
     const senhaPermitida = "senha123";
 
     if (email === emailPermitido && senha === senhaPermitida) {
-      navigation.navigate("Home");
+      navigation.navigate("DrawerRoutes");
     } else {
       Platform.OS === "web" ? window.alert("Email ou Senha inválidos") : Alert.alert("Erro", "Email ou Senha inválidos");
     }

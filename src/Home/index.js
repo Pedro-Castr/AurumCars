@@ -322,7 +322,7 @@ export default function Home({ navigation }) {
               <TouchableOpacity
                 style={{ marginRight: 15 }}
                 onPress={() =>
-                  navigation.navigate("EditCarro", {
+                  navigation.navigate("Editar Carro", {
                     id: item.id,
                     modelo: item.modelo,
                     potencia: item.potencia,
@@ -341,14 +341,6 @@ export default function Home({ navigation }) {
           </View>
         )}
       />
-
-      {/*Botão para incluir carro */}
-      <TouchableOpacity
-        style={styles.buttonNewTask}
-        onPress={() => navigation.navigate("AddCarro")}
-      >
-        <FontAwesome name={"plus"} size={20} color={"#0D0D0D"} />
-      </TouchableOpacity>
 
       {/*Modal para excluir carro */}
       <Modal

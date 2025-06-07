@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   },
   //Texto do rodapé
   footerText: {
-    color: "#0D0D0D",
+    color: "#fff",
     fontSize: 14,
     textAlign: "left",
   },
