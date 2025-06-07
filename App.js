@@ -2,8 +2,8 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import Task from "./src/Home/index";
-import NewTask from "./src/NewTask/index";
+import Home from "./src/Home/index";
+import AddCarro from "./src/AddCarro/index";
 import EditTask from "./src/EditTask/index";
 
 //definição do Stack
@@ -13,10 +13,10 @@ const Stack = createStackNavigator();
 export default function App({ navigation }) {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Task">
+      <Stack.Navigator initialRouteName="Home">
         <Stack.Screen
-          name="Task"
-          component={Task}
+          name="Home"
+          component={Home}
           options={{
             headerTintColor: "#0D0D0D",
             headerStyle: {
@@ -26,8 +26,8 @@ export default function App({ navigation }) {
         />
 
         <Stack.Screen
-          name="New Task"
-          component={NewTask}
+          name="AddCarro"
+          component={AddCarro}
           options={{
             headerTintColor: "#0D0D0D",
             headerStyle: {

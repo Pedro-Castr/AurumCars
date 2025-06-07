@@ -17,8 +17,9 @@ import styles from "./styles";
 //Função principal do New Task
 export default function NewTask({ navigation }) {
   //Variáveis a serem manipuladas
-  const [description, setDescription] = useState("");
-  const [priority, setPriority] = useState("Média");
+  const [modelo, setModelo] = useState("");
+  const [potencia, setPotencia] = useState("");
+  const [categoria, setCategoria] = useState("Esportivo");
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
 
@@ -29,15 +30,20 @@ export default function NewTask({ navigation }) {
 
   //Função para validar os inputs
   const validateInputs = () => {
-    if (!description.trim()) {
+    if (!modelo.trim()) {
       Platform.OS === "web"
-        ? window.alert("Informe a descrição da tarefa")
-        : Alert.alert("Erro", "Informe a descrição da tarefa!");
+        ? window.alert("Informe um modelo")
+        : Alert.alert("Erro", "Informe um modelo");
       return false;
     }
 
-    if (!priority.trim()) {
-      Alert.alert("Erro", "Informe a prioridade da tarefa!");
+    if (potencia === undefined || potencia === null || potencia <= 0) {
+      Alert.alert("Erro", "Informe a potência do veículo!");
+      return false;
+    }
+
+    if (!categoria.trim()) {
+      Alert.alert("Erro", "Informe a categoria do veículo!");
       return false;
     }
 
@@ -49,20 +55,21 @@ export default function NewTask({ navigation }) {
     return true;
   };
 
-  //Função para adicionar tarefas no projeto
-  const addTask = () => {
+  //Função para adicionar carros ao projeto
+  const addCarro = () => {
     if (validateInputs()) {
-      const taskDate = new Date(date);
-      taskDate.setHours(0, 0, 0, 0);
+      const carDate = new Date(date);
+      carDate.setHours(0, 0, 0, 0);
 
-      database.collection("Tasks").add({
-        description: description,
-        priority: priority,
-        date: taskDate,
-        finished: false,
+      database.collection("Carros").add({
+        modelo: modelo,
+        potencia: potencia,
+        categoria: categoria,
+        date: carDate,
+        estoque: false
       });
 
-      navigation.navigate("Task");
+      navigation.navigate("Home");
     }
   };
 
@@ -84,29 +91,38 @@ export default function NewTask({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Descrição</Text>
+      <Text style={styles.label}>Modelo</Text>
 
       <TextInput
         style={styles.inputText}
-        value={description}
-        onChangeText={setDescription}
-        placeholder="Informe a tarefa (Ex. Estudar React Native)"
+        value={modelo}
+        onChangeText={setModelo}
+        placeholder="Informe o modelo de seu veículo"
       />
 
-      <Text style={styles.label}>Prioridade</Text>
+      <Text style={styles.label}>Potência</Text>
+
+      <TextInput
+        style={styles.inputText}
+        value={potencia}
+        onChangeText={setPotencia}
+        placeholder="Informe a potência de seu veículo"
+      />
+
+      <Text style={styles.label}>Categoria</Text>
 
       <Picker
         style={styles.inputText}
-        value={priority}
+        value={categoria}
         onValueChange={(itemValue) => setPriority(itemValue)}
       >
-        <Picker.Item label="Urgente" value="Urgente" />
-        <Picker.Item label="Alta" value="Alta" />
-        <Picker.Item label="Média" value="Média" />
-        <Picker.Item label="Baixa" value="Baixa" />
+        <Picker.Item label="Esportivo" value="Esportivo" />
+        <Picker.Item label="SUV" value="SUV" />
+        <Picker.Item label="Elétrico" value="Elétrico" />
+        <Picker.Item label="Clássico" value="Clássico" />
       </Picker>
 
-      <Text style={styles.label}>Data</Text>
+      <Text style={styles.label}>Data de lançamento</Text>
 
       {/*Verifica se é Mobile para exibir o DatePicker */}
 
@@ -122,9 +138,9 @@ export default function NewTask({ navigation }) {
             padding: 10,
             height: 50,
             borderBottomWidth: 1,
-            borderBottomColor: "#007BFF",
+            borderBottomColor: "#D4AF37",
             border: "none",
-            borderBottom: "1px solid #007BFF",
+            borderBottom: "1px solid #D4AF37",
             outline: "none",
             fontSize: 16,
             boxSizing: "border-box",
@@ -156,14 +172,14 @@ export default function NewTask({ navigation }) {
         </>
       )}
 
-      <TouchableOpacity style={styles.buttonNewTask} onPress={addTask}>
+      <TouchableOpacity style={styles.buttonNewTask} onPress={addCarro}>
         <FontAwesome name="save" size={20} color="#FFF" />
       </TouchableOpacity>
 
       {/*Rodapé da página */}
       <View style={styles.footer}>
         <Text style={styles.footerText}>
-          Desenvolvido por ADS FASM - 5 Período 2025
+          Desenvolvido por Pedro Castro
         </Text>
       </View>
     </View>

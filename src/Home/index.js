@@ -202,6 +202,11 @@ export default function Home({ navigation }) {
         data={filteredCarro}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
+        ListHeaderComponent={() => (
+          <View style={{ padding: 10 }}>
+            <Text style={{ fontSize: 22, color: "#454605", fontWeight: "bold", textAlign: "center" }}>Carros de Luxo AurumCars</Text>
+          </View>
+        )}
         renderItem={({ item }) => (
           <View style={styles.contextAllTasks}>
             <View
@@ -239,7 +244,7 @@ export default function Home({ navigation }) {
                     },
                   ]}
                 >
-                  {item.potencia}
+                  {item.potencia} <Text>P</Text>
                 </Text>
 
                 <Text
@@ -339,7 +344,7 @@ export default function Home({ navigation }) {
       {/*Botão para incluir carro */}
       <TouchableOpacity
         style={styles.buttonNewTask}
-        onPress={() => navigation.navigate("New Task")}
+        onPress={() => navigation.navigate("AddCarro")}
       >
         <FontAwesome name={"plus"} size={20} color={"#0D0D0D"} />
       </TouchableOpacity>
