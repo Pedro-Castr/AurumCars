@@ -4,7 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Home from "./src/Home/index";
 import AddCarro from "./src/AddCarro/index";
-import EditTask from "./src/EditTask/index";
+import EditCarro from "./src/EditCarro/index";
 
 //definição do Stack
 const Stack = createStackNavigator();
@@ -37,8 +37,8 @@ export default function App({ navigation }) {
         />
 
         <Stack.Screen
-          name="Edit Task"
-          component={EditTask}
+          name="EditCarro"
+          component={EditCarro}
           options={{
             headerTintColor: "#0D0D0D",
             headerStyle: {

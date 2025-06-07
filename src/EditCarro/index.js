@@ -1,4 +1,3 @@
-//Importações de componentes e firebase
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -14,25 +13,54 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { FontAwesome } from "@expo/vector-icons";
 import styles from "./styles";
 
-export default function AddCarro({ navigation }) {
-  //Variáveis a serem manipuladas
-  const [modelo, setModelo] = useState("");
-  const [potencia, setPotencia] = useState("");
-  const [categoria, setCategoria] = useState("Esportivo");
-  const [date, setDate] = useState(new Date());
+export default function EditCarro({ navigation, route }) {
+  const {
+    id,
+    modelo: modeloParam,
+    potencia: potenciaParam,
+    categoria: categoriaParam,
+    date: dateParam,
+  } = route.params;
+
+  const [modelo, setModelo] = useState(route.params.modelo);
+  const [potencia, setPotencia] = useState(String(route.params.potencia));
+  const [categoria, setCategoria] = useState(route.params.categoria);
+
+  // Faz uma validação maluca pra tratar a data
+  let initialDate;
+
+  try {
+    const rawDate = route.params?.date;
+
+    if (rawDate?.toDate) {
+      // Caso seja um Timestamp do Firestore
+      initialDate = rawDate.toDate();
+    } else if (typeof rawDate === "string" || typeof rawDate === "number") {
+      // Caso seja uma string ou timestamp válido
+      initialDate = new Date(rawDate);
+    } else {
+      throw new Error("Formato de data não reconhecido.");
+    }
+
+    // Verifica se a data é válida
+    if (isNaN(initialDate.getTime())) {
+      throw new Error("Data inválida gerada.");
+    }
+  } catch (err) {
+    console.warn("Erro ao interpretar a data. Usando data atual.", err);
+    initialDate = new Date();
+  }
+
+  const [date, setDate] = useState(initialDate);
+
+
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  //Função definir formato de data DD/MM/AAAA
-  useEffect(() => {
-    setDate(new Date());
-  }, []);
-
-  //Função para validar os inputs
-  const validateInputs = () => {
+  const validadeInputs = () => {
     if (!modelo.trim()) {
       Platform.OS === "web"
-        ? window.alert("Informe um modelo")
-        : Alert.alert("Erro", "Informe um modelo");
+        ? window.alert("Informe o modelo")
+        : Alert.alert("Erro", "Informe o modelo");
       return false;
     }
 
@@ -44,44 +72,40 @@ export default function AddCarro({ navigation }) {
     }
 
     if (!categoria.trim()) {
-      Alert.alert("Erro", "Informe a categoria do veículo!");
+      Alert.alert("Erro", "Informe a categoria do modelo");
       return false;
     }
 
     if (!date) {
-      Alert.alert("Erro", "Informe a data de lançamento!");
+      Alert.alert("Erro", "Informe a data de lançamento");
       return false;
     }
 
     return true;
   };
 
-  //Função para adicionar carros ao projeto
-  const addCarro = () => {
-    if (validateInputs()) {
+  const editCarro = () => {
+    if (validadeInputs()) {
       const carDate = new Date(date);
       carDate.setHours(0, 0, 0, 0);
 
-      database.collection("Carros").add({
+      database.collection("Carros").doc(id).update({
         modelo: modelo,
-        potencia: potencia,
+        potencia: parseInt(potencia),
         categoria: categoria,
-        dataLancamento: carDate,
-        estoque: false
+        dataLancamento: carDate
       });
 
       navigation.navigate("Home");
     }
   };
 
-  //Função para adicionar data (web)
   const handleWebDateChange = (e) => {
     const [year, month, day] = e.target.value.split("-").map(Number);
     const newDate = new Date(year, month - 1, day);
     setDate(newDate);
   };
 
-  //Função para adicionar data (mobile)
   const onDateChange = (event, selectedDate) => {
     if (selectedDate) {
       setDate(selectedDate);
@@ -98,7 +122,7 @@ export default function AddCarro({ navigation }) {
         style={styles.inputText}
         value={modelo}
         onChangeText={setModelo}
-        placeholder="Informe o modelo de seu veículo"
+        placeholder="Informe o modelo"
       />
 
       <Text style={styles.label}>Potência</Text>
@@ -107,7 +131,7 @@ export default function AddCarro({ navigation }) {
         style={styles.inputText}
         value={potencia}
         onChangeText={setPotencia}
-        placeholder="Informe a potência de seu veículo"
+        placeholder="Informe a potência"
       />
 
       <Text style={styles.label}>Categoria</Text>
@@ -123,7 +147,7 @@ export default function AddCarro({ navigation }) {
         <Picker.Item label="Clássico" value="Clássico" />
       </Picker>
 
-      <Text style={styles.label}>Data de lançamento</Text>
+      <Text style={styles.label}>Data de Lançamento</Text>
 
       {/*Verifica se é Mobile para exibir o DatePicker */}
 
@@ -173,11 +197,10 @@ export default function AddCarro({ navigation }) {
         </>
       )}
 
-      <TouchableOpacity style={styles.buttonNewTask} onPress={addCarro}>
-        <FontAwesome name="save" size={20} color="#FFF" />
+      <TouchableOpacity style={styles.buttonNewTask} onPress={editCarro}>
+        <FontAwesome name="edit" size={20} color={"#fff"} />
       </TouchableOpacity>
 
-      {/*Rodapé da página */}
       <View style={styles.footer}>
         <Text style={styles.footerText}>
           Desenvolvido por Pedro Castro

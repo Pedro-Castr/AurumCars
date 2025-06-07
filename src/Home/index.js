@@ -204,7 +204,7 @@ export default function Home({ navigation }) {
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={() => (
           <View style={{ padding: 10 }}>
-            <Text style={{ fontSize: 22, color: "#454605", fontWeight: "bold", textAlign: "center" }}>Carros de Luxo AurumCars</Text>
+            <Text style={{ fontSize: 22, fontWeight: "bold", textAlign: "center" }}>Estoque de Luxo | AurumCars</Text>
           </View>
         )}
         renderItem={({ item }) => (
@@ -244,7 +244,7 @@ export default function Home({ navigation }) {
                     },
                   ]}
                 >
-                  {item.potencia} <Text>P</Text>
+                  {item.potencia}<Text>P</Text>
                 </Text>
 
                 <Text
@@ -322,9 +322,10 @@ export default function Home({ navigation }) {
               <TouchableOpacity
                 style={{ marginRight: 15 }}
                 onPress={() =>
-                  navigation.navigate("Edit Task", {
+                  navigation.navigate("EditCarro", {
                     id: item.id,
                     modelo: item.modelo,
+                    potencia: item.potencia,
                     categoria: item.categoria,
                     date: item.date,
                   })
